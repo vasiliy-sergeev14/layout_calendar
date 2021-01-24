@@ -1,3 +1,81 @@
+$margin-size: 1px;
+$size: 100px;
+
+* {
+  box-sizing: border-box;
+}
+
 body {
   margin: 0;
+
+  font-family: Arial, sans-serif;
+  font-size: 30px;
+}
+
+@mixin day {
+  width: $size;
+  height: $size;
+  line-height: $size;
+
+  background-color: #eee;
+  border: 1px solid;
+
+  text-align: center;
+  transition: transform 1s;
+  &:hover {
+    transform: translateY(-20px);
+    background-color: pink;
+    cursor: pointer;
+  }
+}
+
+.calendar {
+  display: flex;
+  flex-wrap: wrap;
+  width: ($size+$margin-size)*7;
+  gap: $margin-size;
+
+  div {
+    @include day;
+  }
+
+  &-30 {
+    div:nth-last-child(-n+1) {
+      display: none;
+    }
+  }
+
+  &-29 {
+    div:nth-last-child(-n+2) {
+      display: none;
+    }
+  }
+
+  &-28 {
+    div:nth-last-child(-n+3) {
+      display: none;
+    }
+  }
+}
+
+@for $days from 1 through 31 {
+  .calendar div:nth-child(#{$days})::before {
+    content: "#{$days}";
+  }
+}
+
+$week: (
+  "mon": 0,
+  "tue": $size + $margin-size,
+  "wed": ($size + $margin-size) * 2,
+  "thu": ($size + $margin-size) * 3,
+  "fri": ($size + $margin-size) * 4,
+  "sat": ($size + $margin-size) * 5,
+  "sun": ($size + $margin-size) * 6
+);
+
+@each $day, $margin-size in $week {
+  .calendar-#{$day} div:first-child {
+    margin-left: $margin-size;
+  }
 }
